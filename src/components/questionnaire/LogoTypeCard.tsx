@@ -39,16 +39,16 @@ const LogoTypeCard = ({
       )}
 
       {/* Logo Grid - 3x2 layout */}
-      <div className="grid grid-cols-3 gap-2 mb-4 w-full">
+      <div className="grid grid-cols-3 gap-3 mb-4 w-full">
         {examples.slice(0, 6).map((example) => (
           <div
             key={example.name}
-            className="relative group/logo flex items-center justify-center p-2 bg-background/50 rounded-lg min-h-[60px]"
+            className="relative group/logo flex items-center justify-center p-3 bg-background/50 rounded-lg min-h-[80px]"
           >
             <img
               src={example.logo}
               alt={example.name}
-              className="h-12 w-auto max-w-full object-contain transition-transform duration-300 group-hover/logo:scale-110"
+              className="h-[75px] w-auto max-w-full object-contain transition-transform duration-300 group-hover/logo:scale-110"
             />
             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap bg-background/90 px-1 rounded">
               {example.name}
@@ -59,7 +59,7 @@ const LogoTypeCard = ({
       
       <div className="text-center">
         <h3 className="font-semibold text-foreground">{label}</h3>
-        <p className="text-sm text-muted-foreground">{malayalamLabel}</p>
+        {malayalamLabel && <p className="text-sm text-muted-foreground">{malayalamLabel}</p>}
         <p className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
           {description}
         </p>

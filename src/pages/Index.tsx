@@ -78,7 +78,7 @@ const logoTypes = [
   {
     type: "abstract",
     label: "Abstract",
-    malayalamLabel: "അമൂർത്തം",
+    malayalamLabel: "",
     description: "Geometric or abstract shapes",
     examples: [
       { name: "Pepsi", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_logo_2014.svg/150px-Pepsi_logo_2014.svg.png" },
