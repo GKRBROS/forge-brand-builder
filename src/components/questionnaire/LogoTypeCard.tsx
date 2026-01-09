@@ -38,17 +38,17 @@ const LogoTypeCard = ({
         </div>
       )}
 
-      {/* Logo Grid - 3x2 layout */}
-      <div className="grid grid-cols-3 gap-3 mb-4 w-full">
-        {examples.slice(0, 6).map((example) => (
+      {/* Logo Grid - 2x2 layout */}
+      <div className="grid grid-cols-2 gap-4 mb-4 w-full">
+        {examples.slice(0, 4).map((example) => (
           <div
             key={example.name}
-            className="relative group/logo flex items-center justify-center p-3 bg-background/50 rounded-lg min-h-[80px]"
+            className="relative group/logo flex items-center justify-center p-4 bg-background/50 rounded-lg min-h-[140px]"
           >
             <img
               src={example.logo}
               alt={example.name}
-              className="h-[75px] w-auto max-w-full object-contain transition-transform duration-300 group-hover/logo:scale-110"
+              className="h-[120px] w-auto max-w-full object-contain transition-transform duration-300 group-hover/logo:scale-110"
             />
             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap bg-background/90 px-1 rounded">
               {example.name}
