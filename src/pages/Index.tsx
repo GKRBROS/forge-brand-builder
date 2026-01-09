@@ -16,10 +16,10 @@ const logoTypes = [
     malayalamLabel: "വാക്കുകൾ മാത്രം",
     description: "Text-based logo using the brand name",
     examples: [
-      { name: "Google", logo: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" },
-      { name: "Coca-Cola", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/200px-Coca-Cola_logo.svg.png" },
-      { name: "FedEx", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/FedEx_Corporation_-_2016_Logo.svg/200px-FedEx_Corporation_-_2016_Logo.svg.png" },
-      { name: "Disney", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/200px-Disney%2B_logo.svg.png" },
+      { name: "Google", logo: "https://img.logo.dev/google.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Coca-Cola", logo: "https://img.logo.dev/coca-cola.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "FedEx", logo: "https://img.logo.dev/fedex.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Disney", logo: "https://img.logo.dev/disney.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
     ],
   },
   {
@@ -28,10 +28,10 @@ const logoTypes = [
     malayalamLabel: "ചുരുക്കെഴുത്ത്",
     description: "Initials or abbreviations",
     examples: [
-      { name: "IBM", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png" },
-      { name: "HP", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/HP_logo_2012.svg/150px-HP_logo_2012.svg.png" },
-      { name: "HBO", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/HBO_logo.svg/150px-HBO_logo.svg.png" },
-      { name: "CNN", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/CNN.svg/150px-CNN.svg.png" },
+      { name: "IBM", logo: "https://img.logo.dev/ibm.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "HP", logo: "https://img.logo.dev/hp.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "HBO", logo: "https://img.logo.dev/hbo.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "CNN", logo: "https://img.logo.dev/cnn.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
     ],
   },
   {
@@ -40,10 +40,10 @@ const logoTypes = [
     malayalamLabel: "ചിഹ്നം മാത്രം",
     description: "Graphic symbol without text",
     examples: [
-      { name: "Apple", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/100px-Apple_logo_black.svg.png" },
-      { name: "Twitter", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/100px-Logo_of_Twitter.svg.png" },
-      { name: "Target", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Target_logo.svg/100px-Target_logo.svg.png" },
-      { name: "Shell", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Shell_logo.svg/100px-Shell_logo.svg.png" },
+      { name: "Apple", logo: "https://img.logo.dev/apple.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Twitter", logo: "https://img.logo.dev/x.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Target", logo: "https://img.logo.dev/target.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Shell", logo: "https://img.logo.dev/shell.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
     ],
   },
   {
@@ -52,10 +52,10 @@ const logoTypes = [
     malayalamLabel: "വാക്കും ചിഹ്നവും",
     description: "Text combined with a symbol",
     examples: [
-      { name: "Adidas", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/200px-Adidas_Logo.svg.png" },
-      { name: "Burger King", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Burger_King_logo_%281999%29.svg/150px-Burger_King_logo_%281999%29.svg.png" },
-      { name: "Lacoste", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Lacoste_logo.svg/150px-Lacoste_logo.svg.png" },
-      { name: "Puma", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Puma_logo.svg/200px-Puma_logo.svg.png" },
+      { name: "Adidas", logo: "https://img.logo.dev/adidas.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Burger King", logo: "https://img.logo.dev/bk.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Lacoste", logo: "https://img.logo.dev/lacoste.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Puma", logo: "https://img.logo.dev/puma.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
     ],
   },
   {
@@ -64,10 +64,10 @@ const logoTypes = [
     malayalamLabel: "മുദ്ര",
     description: "Text inside a symbol or badge",
     examples: [
-      { name: "Starbucks", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/150px-Starbucks_Corporation_Logo_2011.svg.png" },
-      { name: "Harley-Davidson", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Harley-Davidson_logo.svg/200px-Harley-Davidson_logo.svg.png" },
-      { name: "BMW", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/100px-BMW.svg.png" },
-      { name: "NFL", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/100px-National_Football_League_logo.svg.png" },
+      { name: "Starbucks", logo: "https://img.logo.dev/starbucks.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Harley-Davidson", logo: "https://img.logo.dev/harley-davidson.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "BMW", logo: "https://img.logo.dev/bmw.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "NFL", logo: "https://img.logo.dev/nfl.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
     ],
   },
   {
@@ -76,10 +76,10 @@ const logoTypes = [
     malayalamLabel: "",
     description: "Geometric or abstract shapes",
     examples: [
-      { name: "Pepsi", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_logo_2014.svg/150px-Pepsi_logo_2014.svg.png" },
-      { name: "Nike", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/200px-Logo_NIKE.svg.png" },
-      { name: "Airbnb", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/150px-Airbnb_Logo_B%C3%A9lo.svg.png" },
-      { name: "BP", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/BP_logo.svg/100px-BP_logo.svg.png" },
+      { name: "Pepsi", logo: "https://img.logo.dev/pepsi.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Nike", logo: "https://img.logo.dev/nike.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "Airbnb", logo: "https://img.logo.dev/airbnb.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
+      { name: "BP", logo: "https://img.logo.dev/bp.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
     ],
   },
 ];
