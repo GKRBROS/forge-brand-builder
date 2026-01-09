@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 
 interface LogoTypeCardProps {
   type: string;
@@ -31,39 +32,38 @@ const LogoTypeCard = ({
           : "border-border bg-card hover:bg-accent/50"
       )}
     >
-      <div className="flex gap-2 mb-3 h-12 items-center justify-center">
-        {examples.map((example) => (
+      {selected && (
+        <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center z-10">
+          <Check className="w-3 h-3 text-primary-foreground" />
+        </div>
+      )}
+
+      {/* Logo Grid - 3x2 layout */}
+      <div className="grid grid-cols-3 gap-2 mb-4 w-full">
+        {examples.slice(0, 6).map((example) => (
           <div
             key={example.name}
-            className="relative group/logo"
+            className="relative group/logo flex items-center justify-center p-2 bg-background/50 rounded-lg min-h-[60px]"
           >
             <img
               src={example.logo}
               alt={example.name}
-              className="h-10 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+              className="h-12 w-auto max-w-full object-contain transition-transform duration-300 group-hover/logo:scale-110"
             />
-            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap">
+            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap bg-background/90 px-1 rounded">
               {example.name}
             </span>
           </div>
         ))}
       </div>
       
-      <div className="mt-4 text-center">
+      <div className="text-center">
         <h3 className="font-semibold text-foreground">{label}</h3>
         <p className="text-sm text-muted-foreground">{malayalamLabel}</p>
         <p className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
           {description}
         </p>
       </div>
-
-      {selected && (
-        <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-          <svg className="w-3 h-3 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-      )}
     </button>
   );
 };

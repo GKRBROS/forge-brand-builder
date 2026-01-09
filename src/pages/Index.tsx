@@ -18,6 +18,9 @@ const logoTypes = [
     examples: [
       { name: "Google", logo: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" },
       { name: "Coca-Cola", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/200px-Coca-Cola_logo.svg.png" },
+      { name: "FedEx", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/FedEx_Corporation_-_2016_Logo.svg/200px-FedEx_Corporation_-_2016_Logo.svg.png" },
+      { name: "Disney", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/200px-Disney%2B_logo.svg.png" },
+      { name: "Canon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Canon_wordmark.svg/200px-Canon_wordmark.svg.png" },
     ],
   },
   {
@@ -28,6 +31,9 @@ const logoTypes = [
     examples: [
       { name: "IBM", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/200px-IBM_logo.svg.png" },
       { name: "HP", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/HP_logo_2012.svg/150px-HP_logo_2012.svg.png" },
+      { name: "HBO", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/HBO_logo.svg/150px-HBO_logo.svg.png" },
+      { name: "CNN", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/CNN.svg/150px-CNN.svg.png" },
+      { name: "NASA", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/150px-NASA_logo.svg.png" },
     ],
   },
   {
@@ -38,6 +44,9 @@ const logoTypes = [
     examples: [
       { name: "Apple", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/100px-Apple_logo_black.svg.png" },
       { name: "Twitter", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/100px-Logo_of_Twitter.svg.png" },
+      { name: "Target", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Target_logo.svg/100px-Target_logo.svg.png" },
+      { name: "Shell", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Shell_logo.svg/100px-Shell_logo.svg.png" },
+      { name: "Spotify", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/100px-Spotify_icon.svg.png" },
     ],
   },
   {
@@ -48,6 +57,9 @@ const logoTypes = [
     examples: [
       { name: "Adidas", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/200px-Adidas_Logo.svg.png" },
       { name: "Burger King", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Burger_King_logo_%281999%29.svg/150px-Burger_King_logo_%281999%29.svg.png" },
+      { name: "Lacoste", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Lacoste_logo.svg/150px-Lacoste_logo.svg.png" },
+      { name: "Puma", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Puma_logo.svg/200px-Puma_logo.svg.png" },
+      { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png" },
     ],
   },
   {
@@ -58,6 +70,9 @@ const logoTypes = [
     examples: [
       { name: "Starbucks", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/150px-Starbucks_Corporation_Logo_2011.svg.png" },
       { name: "Harley-Davidson", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Harley-Davidson_logo.svg/200px-Harley-Davidson_logo.svg.png" },
+      { name: "BMW", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/100px-BMW.svg.png" },
+      { name: "NFL", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/100px-National_Football_League_logo.svg.png" },
+      { name: "Warner Bros", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Warner_Bros_logo.svg/150px-Warner_Bros_logo.svg.png" },
     ],
   },
   {
@@ -68,19 +83,22 @@ const logoTypes = [
     examples: [
       { name: "Pepsi", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_logo_2014.svg/150px-Pepsi_logo_2014.svg.png" },
       { name: "Nike", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/200px-Logo_NIKE.svg.png" },
+      { name: "Airbnb", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/150px-Airbnb_Logo_B%C3%A9lo.svg.png" },
+      { name: "BP", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/BP_logo.svg/100px-BP_logo.svg.png" },
+      { name: "Chase", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Chase_logo_2007.svg/100px-Chase_logo_2007.svg.png" },
     ],
   },
 ];
 
 const fontStyles = [
-  { name: "Sans Serif", sample: "Aa", fontClass: "font-sans" },
-  { name: "Serif", sample: "Aa", fontClass: "font-serif" },
-  { name: "Script", sample: "Aa", fontClass: "italic" },
-  { name: "Slab Serif", sample: "Aa", fontClass: "font-mono font-bold" },
-  { name: "Geometric", sample: "Aa", fontClass: "font-sans font-light tracking-wider" },
-  { name: "Display", sample: "Aa", fontClass: "font-bold text-3xl" },
-  { name: "Monospace", sample: "Aa", fontClass: "font-mono" },
-  { name: "Handwriting", sample: "Aa", fontClass: "italic font-light" },
+  { name: "Sans Serif", sample: "Clean Modern Professional", fontClass: "font-sans" },
+  { name: "Serif", sample: "Elegant Classic Timeless", fontClass: "font-serif" },
+  { name: "Script", sample: "Graceful Flowing Creative", fontClass: "italic" },
+  { name: "Slab Serif", sample: "Bold Strong Industrial", fontClass: "font-mono font-bold" },
+  { name: "Geometric", sample: "Minimal Sharp Precise", fontClass: "font-sans font-light tracking-wider" },
+  { name: "Display", sample: "Eye-Catching Headlines", fontClass: "font-bold" },
+  { name: "Monospace", sample: "Technical Code Developer", fontClass: "font-mono" },
+  { name: "Handwriting", sample: "Personal Friendly Natural", fontClass: "italic font-light" },
 ];
 
 const usageOptions = [
@@ -237,7 +255,7 @@ const Index = () => {
           title="Typography Preference - നിങ്ങൾ ഇഷ്ടപ്പെടുന്ന Font ശൈലി എന്താണ്?"
           required
         >
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {fontStyles.map((font) => (
               <FontStyleCard
                 key={font.name}

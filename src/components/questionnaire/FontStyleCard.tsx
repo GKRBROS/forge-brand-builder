@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 
 interface FontStyleCardProps {
   name: string;
@@ -20,15 +21,25 @@ const FontStyleCard = ({
       type="button"
       onClick={onSelect}
       className={cn(
-        "flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all duration-200",
-        "hover:border-primary hover:shadow-md",
+        "relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200",
+        "hover:border-primary hover:shadow-md min-h-[120px]",
         selected
           ? "border-primary bg-primary/5"
           : "border-border bg-card"
       )}
     >
-      <span className={cn("text-2xl mb-1", fontClass)}>{sample}</span>
-      <span className="text-xs text-muted-foreground">{name}</span>
+      {selected && (
+        <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+          <Check className="w-3 h-3 text-primary-foreground" />
+        </div>
+      )}
+      <span className={cn("text-base md:text-lg mb-2 text-center leading-tight", fontClass)}>
+        {sample}
+      </span>
+      <span className={cn("text-xs text-muted-foreground mb-1", fontClass)}>
+        Aa Bb Cc 123
+      </span>
+      <span className="text-xs font-medium text-foreground mt-1">{name}</span>
     </button>
   );
 };
