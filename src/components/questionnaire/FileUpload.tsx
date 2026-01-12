@@ -37,15 +37,15 @@ const FileUpload = ({ files, onFilesChange }: FileUploadProps) => {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
-          "border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200",
+          "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-200",
           isDragging
-            ? "border-primary bg-primary/5"
-            : "border-border hover:border-primary/50 hover:bg-accent/30"
+            ? "border-foreground bg-muted"
+            : "border-border hover:border-foreground/50 hover:bg-muted/50"
         )}
       >
         <Upload className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
         <p className="text-sm text-muted-foreground">
-          Drag & drop files here or <span className="text-primary font-medium">browse</span>
+          Drag & drop files here or <span className="text-foreground font-medium">browse</span>
         </p>
         <p className="text-xs text-muted-foreground mt-1">PNG, JPG, SVG up to 10MB</p>
         <input
@@ -63,13 +63,13 @@ const FileUpload = ({ files, onFilesChange }: FileUploadProps) => {
           {files.map((file, index) => (
             <div
               key={index}
-              className="flex items-center gap-2 bg-accent/50 rounded-lg px-3 py-2 text-sm"
+              className="flex items-center gap-2 bg-muted rounded-full px-3 py-2 text-sm"
             >
               <span className="truncate max-w-[150px]">{file.name}</span>
               <button
                 type="button"
                 onClick={() => removeFile(index)}
-                className="text-muted-foreground hover:text-destructive transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -129,18 +129,48 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Grid Background Pattern */}
+      <div className="fixed inset-0 pointer-events-none" style={{
+        backgroundImage: `
+          linear-gradient(to right, hsl(0 0% 90%) 1px, transparent 1px),
+          linear-gradient(to bottom, hsl(0 0% 90%) 1px, transparent 1px)
+        `,
+        backgroundSize: '60px 60px'
+      }} />
+
       {/* Header */}
-      <header className="bg-primary text-primary-foreground py-8 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Think Forge Global</h1>
-          <p className="text-lg opacity-90">Logo Design Questionnaire</p>
+      <header className="relative border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="text-xs font-bold leading-none">
+              <span className="block">Think</span>
+              <span className="block">Forge</span>
+              <span className="block text-muted-foreground">Global.</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-muted-foreground">Available for New Projects</span>
+          </div>
         </div>
       </header>
 
+      {/* Hero Section */}
+      <div className="relative py-16 px-6 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            Logo Design <span className="text-accent">Questionnaire</span>
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Help us understand your brand to create the perfect logo
+          </p>
+        </div>
+      </div>
+
       {/* Introduction */}
-      <div className="max-w-3xl mx-auto px-4 py-6">
-        <div className="bg-accent/30 rounded-xl p-5 border border-border">
-          <p className="text-muted-foreground text-sm leading-relaxed">
+      <div className="relative max-w-3xl mx-auto px-6 pb-8">
+        <div className="bg-card rounded-lg p-6 border border-border shadow-sm">
+          <p className="text-muted-foreground leading-relaxed">
             ഈ ഫോം നിങ്ങളുടെ ബ്രാൻഡിനെ നന്നായി മനസ്സിലാക്കാനും ആദ്യ ശ്രമത്തിൽ തന്നെ മികച്ച ലോഗോ 
             സൃഷ്ടിക്കാനും ഞങ്ങളെ സഹായിക്കും. വ്യക്തമായ ഉത്തരങ്ങൾ നൽകിയാൽ ഡിസൈൻ പ്രക്രിയ 
             സുഗമമാകുകയും അനാവശ്യ മാറ്റങ്ങൾ ഒഴിവാക്കാനും സാധിക്കും.
@@ -149,7 +179,7 @@ const Index = () => {
       </div>
 
       {/* Form */}
-      <form className="max-w-3xl mx-auto px-4 pb-12 space-y-6">
+      <form className="relative max-w-3xl mx-auto px-6 pb-16 space-y-6">
         {/* Brand Name */}
         <FormSection
           number={1}
@@ -305,11 +335,11 @@ const Index = () => {
         </FormSection>
 
         {/* Submit Button */}
-        <div className="pt-6">
+        <div className="pt-8">
           <Button
             type="submit"
             size="lg"
-            className="w-full py-6 text-lg font-semibold"
+            className="w-full py-6 text-lg font-medium rounded-full border-2 border-foreground hover:bg-foreground hover:text-background transition-all duration-300"
           >
             Submit Questionnaire
           </Button>
