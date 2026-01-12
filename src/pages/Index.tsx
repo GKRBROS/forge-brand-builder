@@ -7,13 +7,16 @@ import LogoTypeCard from "@/components/questionnaire/LogoTypeCard";
 import FontStyleCard from "@/components/questionnaire/FontStyleCard";
 import UsageCheckbox from "@/components/questionnaire/UsageCheckbox";
 import FileUpload from "@/components/questionnaire/FileUpload";
+import LanguageSwitch from "@/components/LanguageSwitch";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Globe, Smartphone, Share2, Package, Printer } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const logoTypes = [
   {
     type: "wordmark",
     label: "Wordmark",
-    malayalamLabel: "വാക്കുകൾ മാത്രം",
     description: "Text-based logo using the brand name",
     examples: [
       { name: "Google", logo: "https://img.logo.dev/google.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
@@ -25,7 +28,6 @@ const logoTypes = [
   {
     type: "lettermark",
     label: "Lettermark",
-    malayalamLabel: "ചുരുക്കെഴുത്ത്",
     description: "Initials or abbreviations",
     examples: [
       { name: "IBM", logo: "https://img.logo.dev/ibm.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
@@ -37,7 +39,6 @@ const logoTypes = [
   {
     type: "symbol",
     label: "Icon/Symbol",
-    malayalamLabel: "ചിഹ്നം മാത്രം",
     description: "Graphic symbol without text",
     examples: [
       { name: "Apple", logo: "https://img.logo.dev/apple.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
@@ -49,7 +50,6 @@ const logoTypes = [
   {
     type: "combination",
     label: "Combination",
-    malayalamLabel: "വാക്കും ചിഹ്നവും",
     description: "Text combined with a symbol",
     examples: [
       { name: "Adidas", logo: "https://img.logo.dev/adidas.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
@@ -61,7 +61,6 @@ const logoTypes = [
   {
     type: "emblem",
     label: "Emblem",
-    malayalamLabel: "മുദ്ര",
     description: "Text inside a symbol or badge",
     examples: [
       { name: "Starbucks", logo: "https://img.logo.dev/starbucks.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
@@ -73,7 +72,6 @@ const logoTypes = [
   {
     type: "abstract",
     label: "Abstract",
-    malayalamLabel: "",
     description: "Geometric or abstract shapes",
     examples: [
       { name: "Pepsi", logo: "https://img.logo.dev/pepsi.com?token=pk_VAZ6tvAVQfCjiD0F0zynSw" },
@@ -95,15 +93,8 @@ const fontStyles = [
   { name: "Handwriting", sample: "Personal Friendly Natural", fontClass: "italic font-light" },
 ];
 
-const usageOptions = [
-  { id: "website", label: "Website", icon: <Globe className="w-4 h-4" /> },
-  { id: "app", label: "App Icon", icon: <Smartphone className="w-4 h-4" /> },
-  { id: "social", label: "Social Media", icon: <Share2 className="w-4 h-4" /> },
-  { id: "packaging", label: "Packaging", icon: <Package className="w-4 h-4" /> },
-  { id: "print", label: "Print Materials", icon: <Printer className="w-4 h-4" /> },
-];
-
 const Index = () => {
+  const { lang, t, switchLanguage } = useLanguage();
   const [formData, setFormData] = useState({
     brandName: "",
     tagline: "",
@@ -116,15 +107,136 @@ const Index = () => {
   });
   const [selectedUsage, setSelectedUsage] = useState<string[]>([]);
   const [referenceFiles, setReferenceFiles] = useState<File[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const usageOptions = [
+    { id: "website", label: t.usageOptions.website, icon: <Globe className="w-4 h-4" /> },
+    { id: "app", label: t.usageOptions.app, icon: <Smartphone className="w-4 h-4" /> },
+    { id: "social", label: t.usageOptions.social, icon: <Share2 className="w-4 h-4" /> },
+    { id: "packaging", label: t.usageOptions.packaging, icon: <Package className="w-4 h-4" /> },
+    { id: "print", label: t.usageOptions.print, icon: <Printer className="w-4 h-4" /> },
+  ];
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
   };
 
   const toggleUsage = (id: string) => {
     setSelectedUsage((prev) =>
       prev.includes(id) ? prev.filter((u) => u !== id) : [...prev, id]
     );
+    if (errors.usage) {
+      setErrors((prev) => ({ ...prev, usage: "" }));
+    }
+  };
+
+  const handleFilesChange = (files: File[]) => {
+    setReferenceFiles(files);
+    if (errors.referenceFiles && files.length > 0) {
+      setErrors((prev) => ({ ...prev, referenceFiles: "" }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.brandName.trim()) {
+      newErrors.brandName = t.validation.brandNameRequired;
+    }
+    if (!formData.description.trim()) {
+      newErrors.description = t.validation.descriptionRequired;
+    }
+    if (!formData.targetCustomers.trim()) {
+      newErrors.targetCustomers = t.validation.targetCustomersRequired;
+    }
+    if (!formData.logoType) {
+      newErrors.logoType = t.validation.logoTypeRequired;
+    }
+    if (!formData.colorPreference.trim()) {
+      newErrors.colorPreference = t.validation.colorPreferenceRequired;
+    }
+    if (!formData.fontStyle) {
+      newErrors.fontStyle = t.validation.fontStyleRequired;
+    }
+    if (referenceFiles.length === 0) {
+      newErrors.referenceFiles = t.validation.logoReferenceRequired;
+    }
+    if (selectedUsage.length === 0) {
+      newErrors.usage = t.validation.usageRequired;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        const base64 = result.split(",")[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error(lang === "en" ? "Please fill all required fields" : "ദയവായി എല്ലാ ആവശ്യമായ ഫീൽഡുകളും പൂരിപ്പിക്കുക");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Convert files to base64
+      const filesWithBase64 = await Promise.all(
+        referenceFiles.map(async (file) => ({
+          name: file.name,
+          base64: await fileToBase64(file),
+          mimeType: file.type,
+        }))
+      );
+
+      const { data, error } = await supabase.functions.invoke("submit-questionnaire", {
+        body: {
+          ...formData,
+          selectedUsage,
+          referenceFiles: filesWithBase64,
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success(t.success);
+      
+      // Reset form
+      setFormData({
+        brandName: "",
+        tagline: "",
+        description: "",
+        targetCustomers: "",
+        logoType: "",
+        colorPreference: "",
+        fontStyle: "",
+        additionalNotes: "",
+      });
+      setSelectedUsage([]);
+      setReferenceFiles([]);
+    } catch (error) {
+      console.error("Submit error:", error);
+      toast.error(t.error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -148,9 +260,12 @@ const Index = () => {
               <span className="block text-muted-foreground">Global.</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-muted-foreground">Available for New Projects</span>
+          <div className="flex items-center gap-4">
+            <LanguageSwitch currentLang={lang} onSwitch={switchLanguage} />
+            <div className="flex items-center gap-2 text-sm">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-muted-foreground hidden sm:inline">{t.header.available}</span>
+            </div>
           </div>
         </div>
       </header>
@@ -159,10 +274,10 @@ const Index = () => {
       <div className="relative py-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            Logo Design <span className="text-accent">Questionnaire</span>
+            {t.hero.title} <span className="text-accent">{t.hero.titleAccent}</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            Help us understand your brand to create the perfect logo
+            {t.hero.subtitle}
           </p>
         </div>
       </div>
@@ -171,24 +286,23 @@ const Index = () => {
       <div className="relative max-w-3xl mx-auto px-6 pb-8">
         <div className="bg-card rounded-lg p-6 border border-border shadow-sm">
           <p className="text-muted-foreground leading-relaxed">
-            ഈ ഫോം നിങ്ങളുടെ ബ്രാൻഡിനെ നന്നായി മനസ്സിലാക്കാനും ആദ്യ ശ്രമത്തിൽ തന്നെ മികച്ച ലോഗോ 
-            സൃഷ്ടിക്കാനും ഞങ്ങളെ സഹായിക്കും. വ്യക്തമായ ഉത്തരങ്ങൾ നൽകിയാൽ ഡിസൈൻ പ്രക്രിയ 
-            സുഗമമാകുകയും അനാവശ്യ മാറ്റങ്ങൾ ഒഴിവാക്കാനും സാധിക്കും.
+            {t.intro}
           </p>
         </div>
       </div>
 
       {/* Form */}
-      <form className="relative max-w-3xl mx-auto px-6 pb-16 space-y-6">
+      <form onSubmit={handleSubmit} className="relative max-w-3xl mx-auto px-6 pb-16 space-y-6">
         {/* Brand Name */}
         <FormSection
           number={1}
-          title="നിങ്ങളുടെ ബ്രാൻഡ് / കമ്പനിയുടെ പേര്"
-          subtitle='Example: "Fresh Bakes Bakery" or "Tech Solutions India"'
+          title={t.form.brandName.title}
+          subtitle={t.form.brandName.subtitle}
           required
+          error={errors.brandName}
         >
           <Input
-            placeholder="Enter your brand name"
+            placeholder={t.form.brandName.placeholder}
             value={formData.brandName}
             onChange={(e) => handleInputChange("brandName", e.target.value)}
             className="bg-background"
@@ -198,11 +312,11 @@ const Index = () => {
         {/* Tagline */}
         <FormSection
           number={2}
-          title="ടാഗ്‌ലൈൻ (Optional)"
-          subtitle='Example: "Baked with Love" or "Innovate. Transform. Succeed."'
+          title={t.form.tagline.title}
+          subtitle={t.form.tagline.subtitle}
         >
           <Input
-            placeholder="Enter your tagline (optional)"
+            placeholder={t.form.tagline.placeholder}
             value={formData.tagline}
             onChange={(e) => handleInputChange("tagline", e.target.value)}
             className="bg-background"
@@ -212,12 +326,13 @@ const Index = () => {
         {/* Description */}
         <FormSection
           number={3}
-          title="നിങ്ങളുടെ ബ്രാൻഡിനെ കുറിച്ച് 1–2 വാക്യങ്ങളിൽ വിവരിക്കുക"
-          subtitle='Example: "We are a boutique bakery specializing in custom cakes and artisan breads using organic ingredients."'
+          title={t.form.description.title}
+          subtitle={t.form.description.subtitle}
           required
+          error={errors.description}
         >
           <Textarea
-            placeholder="Describe your brand in 1-2 sentences"
+            placeholder={t.form.description.placeholder}
             value={formData.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
             className="bg-background min-h-[100px]"
@@ -227,12 +342,13 @@ const Index = () => {
         {/* Target Customers */}
         <FormSection
           number={4}
-          title="നിങ്ങളുടെ പ്രധാന Customers ആരൊക്കെയാണ്?"
-          subtitle='Example: "Young professionals aged 25-40 in urban areas who value premium quality and convenience."'
+          title={t.form.targetCustomers.title}
+          subtitle={t.form.targetCustomers.subtitle}
           required
+          error={errors.targetCustomers}
         >
           <Textarea
-            placeholder="Describe your target customers"
+            placeholder={t.form.targetCustomers.placeholder}
             value={formData.targetCustomers}
             onChange={(e) => handleInputChange("targetCustomers", e.target.value)}
             className="bg-background min-h-[100px]"
@@ -242,15 +358,20 @@ const Index = () => {
         {/* Logo Type */}
         <FormSection
           number={5}
-          title="ഏത് തരം ലോഗോയാണ് നിങ്ങൾ ആഗ്രഹിക്കുന്നത്?"
-          subtitle="Select the logo style that best fits your brand (hover over examples)"
+          title={t.form.logoType.title}
+          subtitle={t.form.logoType.subtitle}
           required
+          error={errors.logoType}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {logoTypes.map((logo) => (
               <LogoTypeCard
                 key={logo.type}
-                {...logo}
+                type={logo.type}
+                label={logo.label}
+                malayalamLabel={t.logoTypes[logo.type as keyof typeof t.logoTypes]}
+                description={logo.description}
+                examples={logo.examples}
                 selected={formData.logoType === logo.type}
                 onSelect={() => handleInputChange("logoType", logo.type)}
               />
@@ -261,12 +382,13 @@ const Index = () => {
         {/* Color Preference */}
         <FormSection
           number={6}
-          title="ലോഗോയ്ക്ക് ഇഷ്ടമുള്ള നിറങ്ങൾ ഉണ്ടോ?"
-          subtitle='Example: "Blue and white for trust" or "Green for eco-friendly" or "No preference"'
+          title={t.form.colorPreference.title}
+          subtitle={t.form.colorPreference.subtitle}
           required
+          error={errors.colorPreference}
         >
           <Input
-            placeholder="Enter your color preferences"
+            placeholder={t.form.colorPreference.placeholder}
             value={formData.colorPreference}
             onChange={(e) => handleInputChange("colorPreference", e.target.value)}
             className="bg-background"
@@ -276,8 +398,9 @@ const Index = () => {
         {/* Typography */}
         <FormSection
           number={7}
-          title="Typography Preference - നിങ്ങൾ ഇഷ്ടപ്പെടുന്ന Font ശൈലി എന്താണ്?"
+          title={t.form.typography.title}
           required
+          error={errors.fontStyle}
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {fontStyles.map((font) => (
@@ -294,18 +417,21 @@ const Index = () => {
         {/* Logo References */}
         <FormSection
           number={8}
-          title="Logo References"
-          subtitle="നിങ്ങൾക്ക് ഇഷ്ടമായ ലോഗോകൾ ഉണ്ടെങ്കിൽ, ദയവായി അവ സാമ്പിൾ ആയി ഇവിടെ അപ്‌ലോഡ് ചെയ്യുക"
+          title={t.form.logoReferences.title}
+          subtitle={t.form.logoReferences.subtitle}
+          required
+          error={errors.referenceFiles}
         >
-          <FileUpload files={referenceFiles} onFilesChange={setReferenceFiles} />
+          <FileUpload files={referenceFiles} onFilesChange={handleFilesChange} />
         </FormSection>
 
         {/* Usage Applications */}
         <FormSection
           number={9}
-          title="Logo Usage / Applications"
-          subtitle="ലോഗോ എവിടെയൊക്കെ ഉപയോഗിക്കും? (ഒന്നിൽ കൂടുതൽ select ചെയ്യാം)"
+          title={t.form.usage.title}
+          subtitle={t.form.usage.subtitle}
           required
+          error={errors.usage}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {usageOptions.map((option) => (
@@ -323,11 +449,11 @@ const Index = () => {
         {/* Additional Notes */}
         <FormSection
           number={10}
-          title="Additional Notes"
-          subtitle="ഡിസൈൻ ആരംഭിക്കുന്നതിന് മുമ്പ് ഞങ്ങൾ പരിഗണിക്കേണ്ട മറ്റേതെങ്കിലും വിശദാംശങ്ങളോ മുൻഗണനകളോ ഉണ്ടോ?"
+          title={t.form.additionalNotes.title}
+          subtitle={t.form.additionalNotes.subtitle}
         >
           <Textarea
-            placeholder="Any additional details or preferences..."
+            placeholder={t.form.additionalNotes.placeholder}
             value={formData.additionalNotes}
             onChange={(e) => handleInputChange("additionalNotes", e.target.value)}
             className="bg-background min-h-[100px]"
@@ -339,9 +465,10 @@ const Index = () => {
           <Button
             type="submit"
             size="lg"
-            className="w-full py-6 text-lg font-medium rounded-full border-2 border-foreground hover:bg-foreground hover:text-background transition-all duration-300"
+            disabled={isSubmitting}
+            className="w-full py-6 text-lg font-medium rounded-full border-2 border-foreground hover:bg-foreground hover:text-background transition-all duration-300 disabled:opacity-50"
           >
-            Submit Questionnaire
+            {isSubmitting ? t.form.submitting : t.form.submit}
           </Button>
         </div>
       </form>
