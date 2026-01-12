@@ -5,6 +5,7 @@ interface FormSectionProps {
   title: string;
   subtitle?: string;
   required?: boolean;
+  error?: string;
   children: React.ReactNode;
   className?: string;
 }
@@ -14,13 +15,17 @@ const FormSection = ({
   title,
   subtitle,
   required,
+  error,
   children,
   className,
 }: FormSectionProps) => {
   return (
-    <section className={cn("bg-card rounded-lg p-6 border border-border shadow-sm", className)}>
+    <section className={cn("bg-card rounded-lg p-6 border border-border shadow-sm", error && "border-red-500", className)}>
       <div className="flex items-start gap-4 mb-5">
-        <span className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-foreground text-foreground flex items-center justify-center text-sm font-semibold">
+        <span className={cn(
+          "flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-semibold",
+          error ? "border-red-500 text-red-500" : "border-foreground text-foreground"
+        )}>
           {number}
         </span>
         <div className="flex-1">
@@ -30,6 +35,9 @@ const FormSection = ({
           </h2>
           {subtitle && (
             <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
+          )}
+          {error && (
+            <p className="text-sm text-red-500 mt-1">{error}</p>
           )}
         </div>
       </div>
