@@ -18,15 +18,15 @@ const FormSection = ({
   className,
 }: FormSectionProps) => {
   return (
-    <section className={cn("bg-card rounded-2xl p-6 shadow-sm border border-border", className)}>
-      <div className="flex items-start gap-4 mb-4">
-        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+    <section className={cn("bg-card rounded-lg p-6 border border-border shadow-sm", className)}>
+      <div className="flex items-start gap-4 mb-5">
+        <span className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-foreground text-foreground flex items-center justify-center text-sm font-semibold">
           {number}
         </span>
         <div className="flex-1">
           <h2 className="text-lg font-semibold text-foreground">
             {title}
-            {required && <span className="text-destructive ml-1">*</span>}
+            {required && <span className="text-accent ml-1">*</span>}
           </h2>
           {subtitle && (
             <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>

@@ -25,32 +25,32 @@ const LogoTypeCard = ({
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-300 text-left w-full",
-        "hover:shadow-lg hover:scale-[1.02] hover:border-primary",
+        "group relative flex flex-col items-center p-4 rounded-lg border transition-all duration-200 text-left w-full",
+        "hover:shadow-md hover:border-foreground",
         selected
-          ? "border-primary bg-primary/5 shadow-md"
-          : "border-border bg-card hover:bg-accent/50"
+          ? "border-foreground bg-card shadow-md"
+          : "border-border bg-card"
       )}
     >
       {selected && (
-        <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center z-10">
-          <Check className="w-3 h-3 text-primary-foreground" />
+        <div className="absolute top-2 right-2 w-5 h-5 bg-foreground rounded-full flex items-center justify-center z-10">
+          <Check className="w-3 h-3 text-background" />
         </div>
       )}
 
       {/* Logo Grid - 2x2 layout */}
-      <div className="grid grid-cols-2 gap-4 mb-4 w-full">
+      <div className="grid grid-cols-2 gap-3 mb-4 w-full">
         {examples.slice(0, 4).map((example) => (
           <div
             key={example.name}
-            className="relative group/logo flex items-center justify-center p-4 bg-background/50 rounded-lg min-h-[140px]"
+            className="relative group/logo flex items-center justify-center p-3 bg-muted rounded-md min-h-[120px]"
           >
             <img
               src={example.logo}
               alt={example.name}
-              className="h-[120px] w-auto max-w-full object-contain transition-transform duration-300 group-hover/logo:scale-110"
+              className="h-[100px] w-auto max-w-full object-contain transition-transform duration-200 group-hover/logo:scale-105"
             />
-            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap bg-background/90 px-1 rounded">
+            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap bg-card px-2 py-0.5 rounded-full border">
               {example.name}
             </span>
           </div>
