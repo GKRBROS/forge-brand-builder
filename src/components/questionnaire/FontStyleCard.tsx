@@ -27,8 +27,8 @@ const FontStyleCard = ({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative flex flex-col items-center justify-center p-4 rounded-lg border transition-all duration-200",
-        "hover:border-foreground hover:shadow-md min-h-[140px] md:min-h-[160px]",
+        "relative w-full flex items-center justify-center p-4 rounded-lg border transition-all duration-200",
+        "hover:border-foreground hover:shadow-md min-h-[120px] sm:min-h-[140px] md:min-h-[160px]",
         selected
           ? variant === "dark"
             ? "border-foreground bg-foreground text-background shadow-md"
@@ -43,33 +43,22 @@ const FontStyleCard = ({
           <Check className="w-3 h-3 text-background" />
         </div>
       )}
+      
       {blank ? (
-        <div className="w-full mb-3 h-20 md:h-24" />
-      ) : image ? (
-        <div className="w-full mb-3 flex items-center justify-center">
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-32 md:h-40 lg:h-48 object-contain"
-            loading="lazy"
-          />
+        <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+          <div className="w-full h-full bg-muted rounded" />
+          <span className="text-sm font-semibold text-foreground">{name}</span>
         </div>
+      ) : image ? (
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-contain p-2"
+          loading="lazy"
+        />
       ) : (
-        <>
-          <span
-            className={cn(
-              "text-base md:text-lg mb-2 text-center leading-tight",
-              fontClass,
-            )}
-          >
-            {sample}
-          </span>
-          <span className={cn("text-xs text-muted-foreground mb-1", fontClass)}>
-            Aa Bb Cc 123
-          </span>
-        </>
+        <div className="w-full h-full" />
       )}
-      <span className="text-xs font-medium text-foreground mt-1">{name}</span>
     </button>
   );
 };

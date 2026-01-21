@@ -323,18 +323,20 @@ const Index = () => {
       <div className="relative max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 py-10 md:py-16 flex flex-col md:flex-row gap-8 lg:gap-12">
         {/* Left column (hero / language) */}
         <div className="md:w-5/12 flex flex-col gap-6 md:sticky md:top-10 md:self-start">
-          <img
-            src="/brand/thinkforge-logo.svg"
-            alt="Think Forge Global"
-            className="h-20 w-20"
-          />
+          <div className="flex justify-start w-full">
+            <img
+              src="/brand/thinkforge-logo.svg"
+              alt="Think Forge Global"
+              className="h-20 w-20"
+            />
+          </div>
 
           <div className="space-y-4">
             <h1
-              className="cal-sans-regular font-normal max-w-full"
+              className={`font-normal max-w-full ${lang === "ml" ? "keraleeyam-regular" : "cal-sans-regular"} text-left`}
               style={{
-                fontSize: "96px",
-                lineHeight: lang === "ml" ? "110px" : "88px",
+                fontSize: lang === "ml" ? "clamp(28px, 6vw, 96px)" : "clamp(32px, 8vw, 96px)",
+                lineHeight: lang === "ml" ? "clamp(24px, 5.5vw, 80px)" : "clamp(32px, 7.5vw, 88px)",
                 letterSpacing: "0px",
                 opacity: 1,
               }}
@@ -343,12 +345,12 @@ const Index = () => {
               <br />
               {t.hero.titleAccent}
             </h1>
-            <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-geist">
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-geist text-center">
               {t.intro}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+          <div className="flex justify-center w-full">
             <LanguageSwitch currentLang={lang} onSwitch={switchLanguage} />
           </div>
         </div>
@@ -430,7 +432,7 @@ const Index = () => {
             required
             error={errors.logoType}
           >
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {logoTypes.map((logo) => (
                 <LogoTypeCard
                   key={logo.type}
@@ -473,7 +475,7 @@ const Index = () => {
             required
             error={errors.fontStyle}
           >
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {fontStyles.map((font) => (
                 <FontStyleCard
                   key={font.name}
