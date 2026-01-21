@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -143,13 +143,6 @@ const Index = () => {
   const [referenceFiles, setReferenceFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLangSwitching, setIsLangSwitching] = useState(false);
-
-  useEffect(() => {
-    setIsLangSwitching(true);
-    const timer = setTimeout(() => setIsLangSwitching(false), 250);
-    return () => clearTimeout(timer);
-  }, [lang]);
 
   const usageOptions = [
     {
@@ -315,9 +308,7 @@ const Index = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen bg-background transition-opacity duration-300 ease-in-out ${isLangSwitching ? "opacity-0" : "opacity-100"}`}
-    >
+    <div className="min-h-screen bg-background">
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -343,7 +334,7 @@ const Index = () => {
               className="cal-sans-regular font-normal max-w-full"
               style={{
                 fontSize: "96px",
-                lineHeight: "88px",
+                lineHeight: lang === "ml" ? "110px" : "88px",
                 letterSpacing: "0px",
                 opacity: 1,
               }}
