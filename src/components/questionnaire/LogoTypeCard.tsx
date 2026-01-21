@@ -27,7 +27,7 @@ const LogoTypeCard = ({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative w-full flex items-center justify-center p-4 rounded-lg border transition-all duration-200",
+        "relative w-full flex items-center justify-center p-3 overflow-hidden rounded-lg border transition-all duration-200",
         "hover:shadow-md hover:border-foreground min-h-[120px] sm:min-h-[140px] md:min-h-[160px]",
         selected
           ? "border-foreground bg-card shadow-md"
@@ -39,11 +39,11 @@ const LogoTypeCard = ({
           <Check className="w-3 h-3 text-background" />
         </div>
       )}
-      
+
       <img
         src={image}
         alt={imageAlt || label}
-        className="w-full h-full object-contain p-2"
+        className="w-4/5 h-auto max-h-full object-contain"
         loading="lazy"
       />
     </button>

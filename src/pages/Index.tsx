@@ -308,13 +308,13 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-          linear-gradient(to right, hsl(0 0% 95%) 1px, transparent 1px),
-          linear-gradient(to bottom, hsl(0 0% 95%) 1px, transparent 1px)
+          linear-gradient(to right, hsl(0 0% 90%) 1px, transparent 1px),
+          linear-gradient(to bottom, hsl(0 0% 90%) 1px, transparent 1px)
         `,
           backgroundSize: "60px 60px",
         }}
@@ -333,10 +333,10 @@ const Index = () => {
 
           <div className="space-y-4">
             <h1
-              className={`font-normal max-w-full ${lang === "ml" ? "keraleeyam-regular" : "cal-sans-regular"} text-left`}
+              className={`font-normal max-w-full ${lang === "ml" ? "keraleeyam-regular" : "cal-sans-regular"} text-center md:text-left`}
               style={{
-                fontSize: lang === "ml" ? "clamp(28px, 6vw, 96px)" : "clamp(32px, 8vw, 96px)",
-                lineHeight: lang === "ml" ? "clamp(24px, 5.5vw, 80px)" : "clamp(32px, 7.5vw, 88px)",
+                fontSize: lang === "ml" ? "clamp(36px, 6vw, 96px)" : "clamp(32px, 8vw, 96px)",
+                lineHeight: lang === "ml" ? "clamp(32px, 5.5vw, 80px)" : "clamp(32px, 7.5vw, 88px)",
                 letterSpacing: "0px",
                 opacity: 1,
               }}
@@ -345,7 +345,7 @@ const Index = () => {
               <br />
               {t.hero.titleAccent}
             </h1>
-            <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-geist text-center">
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-geist text-center text-justify">
               {t.intro}
             </p>
           </div>
@@ -432,7 +432,7 @@ const Index = () => {
             required
             error={errors.logoType}
           >
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 w-full">
               {logoTypes.map((logo) => (
                 <LogoTypeCard
                   key={logo.type}
@@ -475,7 +475,7 @@ const Index = () => {
             required
             error={errors.fontStyle}
           >
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 w-full">
               {fontStyles.map((font) => (
                 <FontStyleCard
                   key={font.name}
