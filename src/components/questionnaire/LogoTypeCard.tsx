@@ -6,7 +6,8 @@ interface LogoTypeCardProps {
   label: string;
   malayalamLabel: string;
   description: string;
-  examples: { name: string; logo: string }[];
+  image: string;
+  imageAlt?: string;
   selected: boolean;
   onSelect: () => void;
 }
@@ -16,7 +17,8 @@ const LogoTypeCard = ({
   label,
   malayalamLabel,
   description,
-  examples,
+  image,
+  imageAlt,
   selected,
   onSelect,
 }: LogoTypeCardProps) => {
@@ -25,11 +27,11 @@ const LogoTypeCard = ({
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col items-center p-4 rounded-lg border transition-all duration-200 text-left w-full",
-        "hover:shadow-md hover:border-foreground",
+        "relative w-full flex items-center justify-center p-3 overflow-hidden rounded-lg border transition-all duration-200",
+        "hover:shadow-md hover:border-foreground min-h-[120px] sm:min-h-[140px] md:min-h-[160px]",
         selected
           ? "border-foreground bg-card shadow-md"
-          : "border-border bg-card"
+          : "border-border bg-card",
       )}
     >
       {selected && (
@@ -38,32 +40,12 @@ const LogoTypeCard = ({
         </div>
       )}
 
-      {/* Logo Grid - 2x2 layout */}
-      <div className="grid grid-cols-2 gap-3 mb-4 w-full">
-        {examples.slice(0, 4).map((example) => (
-          <div
-            key={example.name}
-            className="relative group/logo flex items-center justify-center p-3 bg-muted rounded-md min-h-[120px]"
-          >
-            <img
-              src={example.logo}
-              alt={example.name}
-              className="h-[100px] w-auto max-w-full object-contain transition-transform duration-200 group-hover/logo:scale-105"
-            />
-            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap bg-card px-2 py-0.5 rounded-full border">
-              {example.name}
-            </span>
-          </div>
-        ))}
-      </div>
-      
-      <div className="text-center">
-        <h3 className="font-semibold text-foreground">{label}</h3>
-        {malayalamLabel && <p className="text-sm text-muted-foreground">{malayalamLabel}</p>}
-        <p className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          {description}
-        </p>
-      </div>
+      <img
+        src={image}
+        alt={imageAlt || label}
+        className="w-4/5 h-auto max-h-full object-contain"
+        loading="lazy"
+      />
     </button>
   );
 };

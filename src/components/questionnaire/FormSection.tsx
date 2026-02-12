@@ -20,29 +20,27 @@ const FormSection = ({
   className,
 }: FormSectionProps) => {
   return (
-    <section className={cn("bg-card rounded-lg p-6 border border-border shadow-sm", error && "border-red-500", className)}>
-      <div className="flex items-start gap-4 mb-5">
-        <span className={cn(
-          "flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-semibold",
-          error ? "border-red-500 text-red-500" : "border-foreground text-foreground"
-        )}>
-          {number}
-        </span>
-        <div className="flex-1">
-          <h2 className="text-lg font-semibold text-foreground">
+    <div className={cn("space-y-3", className)}>
+      <p className="text-center text-base font-semibold text-muted-foreground">{`Question ${number}`}</p>
+      <section
+        className={cn(
+          "bg-card rounded-lg p-6 border border-border shadow-sm",
+          error && "border-red-500",
+        )}
+      >
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-foreground leading-tight font-geist">
             {title}
-            {required && <span className="text-accent ml-1">*</span>}
+            {required && <span className="text-red-500 ml-1">*</span>}
           </h2>
           {subtitle && (
             <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
           )}
-          {error && (
-            <p className="text-sm text-red-500 mt-1">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
         </div>
-      </div>
-      <div className="ml-12">{children}</div>
-    </section>
+        <div className="space-y-3">{children}</div>
+      </section>
+    </div>
   );
 };
 

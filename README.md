@@ -71,3 +71,34 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## System Enhancements (Feb 2026)
+
+### 1. Form Validation
+- All fields are now mandatory except the **Tagline** field.
+- Required fields are indicated with a red asterisk (`*`).
+- Client-side validation ensures all required fields are filled before submission.
+
+### 2. Image Upload Enhancements
+- Maximum file size increased to **20MB**.
+- Supported formats: **PNG, JPG, JPEG**.
+- Real-time file size and format checking with immediate feedback.
+
+### 3. Toast Notification System
+- Replaced existing notifications with `react-toastify`.
+- Notifications appear at the **top-right** corner and auto-dismiss after **5 seconds**.
+- Success messages are green, and error messages are red.
+- Specific error message for invalid files: "The format is wrong or the image uploaded exceeded the size limit".
+
+### 4. Automatic Data Cleanup
+- A scheduled cleanup mechanism deletes storage data older than **45 days**.
+- Database records are preserved; only binary files in the storage bucket are removed.
+- **Setup Instructions:**
+  1. Ensure `pg_cron` and `pg_net` extensions are enabled in your Supabase project.
+  2. Run the migration file `supabase/migrations/20260212000000_cleanup_logs.sql`.
+  3. Replace `YOUR_SERVICE_ROLE_KEY` in the migration with your actual Service Role Key from Supabase Settings > API.
+
+### 5. Quality Assurance
+- Unit tests implemented for validation logic in `src/lib/validation.test.ts`.
+- To run tests: `npm test`.
+

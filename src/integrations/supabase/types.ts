@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      questionnaire_submissions: {
+        Row: {
+          additional_notes: string | null
+          brand_name: string
+          color_preference: string
+          created_at: string
+          description: string
+          font_style: string
+          id: string
+          logo_type: string
+          reference_files: Json | null
+          selected_usage: string[]
+          tagline: string | null
+          target_customers: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          brand_name: string
+          color_preference: string
+          created_at?: string
+          description: string
+          font_style: string
+          id?: string
+          logo_type: string
+          reference_files?: Json | null
+          selected_usage?: string[]
+          tagline?: string | null
+          target_customers: string
+        }
+        Update: {
+          additional_notes?: string | null
+          brand_name?: string
+          color_preference?: string
+          created_at?: string
+          description?: string
+          font_style?: string
+          id?: string
+          logo_type?: string
+          reference_files?: Json | null
+          selected_usage?: string[]
+          tagline?: string | null
+          target_customers?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,27 +1,59 @@
 import { Upload, X } from "lucide-react";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 interface FileUploadProps {
   files: File[];
   onFilesChange: (files: File[]) => void;
 }
 
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+
 const FileUpload = ({ files, onFilesChange }: FileUploadProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const validateFiles = (newFiles: File[]): File[] => {
+    const validFiles: File[] = [];
+    let hasError = false;
+
+    newFiles.forEach((file) => {
+      const isValidType = ALLOWED_TYPES.includes(file.type);
+      const isValidSize = file.size <= MAX_FILE_SIZE;
+
+      if (!isValidType || !isValidSize) {
+        toast.error("The format is wrong or the image uploaded exceeded the size limit", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        hasError = true;
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    return validFiles;
+  };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     const droppedFiles = Array.from(e.dataTransfer.files);
-    onFilesChange([...files, ...droppedFiles]);
+    const validatedFiles = validateFiles(droppedFiles);
+    if (validatedFiles.length > 0) {
+      onFilesChange([...files, ...validatedFiles]);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      onFilesChange([...files, ...selectedFiles]);
+      const validatedFiles = validateFiles(selectedFiles);
+      if (validatedFiles.length > 0) {
+        onFilesChange([...files, ...validatedFiles]);
+      }
     }
   };
 
@@ -47,12 +79,12 @@ const FileUpload = ({ files, onFilesChange }: FileUploadProps) => {
         <p className="text-sm text-muted-foreground">
           Drag & drop files here or <span className="text-foreground font-medium">browse</span>
         </p>
-        <p className="text-xs text-muted-foreground mt-1">PNG, JPG, SVG up to 10MB</p>
+        <p className="text-xs text-muted-foreground mt-1">PNG, JPG, JPEG up to 20MB</p>
         <input
           ref={inputRef}
           type="file"
           multiple
-          accept="image/*"
+          accept=".png,.jpg,.jpeg"
           onChange={handleChange}
           className="hidden"
         />

@@ -1,9 +1,16 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+interface FileData {
+  name: string;
+  base64: string;
+  mimeType: string;
+}
 
 interface FormData {
   brandName: string;
@@ -15,184 +22,7 @@ interface FormData {
   fontStyle: string;
   additionalNotes: string;
   selectedUsage: string[];
-  referenceFiles: { name: string; base64: string; mimeType: string }[];
-}
-
-async function uploadToGoogleDrive(
-  accessToken: string,
-  folderId: string,
-  fileName: string,
-  base64Content: string,
-  mimeType: string
-): Promise<{ id: string; webViewLink: string }> {
-  // Create file metadata
-  const metadata = {
-    name: fileName,
-    parents: [folderId],
-  };
-
-  // Convert base64 to blob
-  const binaryContent = Uint8Array.from(atob(base64Content), c => c.charCodeAt(0));
-
-  // Create multipart body
-  const boundary = "-------314159265358979323846";
-  const delimiter = `\r\n--${boundary}\r\n`;
-  const closeDelimiter = `\r\n--${boundary}--`;
-
-  const metadataStr = JSON.stringify(metadata);
-  
-  // Build the multipart request
-  const encoder = new TextEncoder();
-  const metadataPart = encoder.encode(
-    `${delimiter}Content-Type: application/json; charset=UTF-8\r\n\r\n${metadataStr}`
-  );
-  const filePart = encoder.encode(
-    `${delimiter}Content-Type: ${mimeType}\r\nContent-Transfer-Encoding: base64\r\n\r\n`
-  );
-  const closeDelimiterBytes = encoder.encode(closeDelimiter);
-  const base64Bytes = encoder.encode(base64Content);
-
-  const body = new Uint8Array(
-    metadataPart.length + filePart.length + base64Bytes.length + closeDelimiterBytes.length
-  );
-  body.set(metadataPart, 0);
-  body.set(filePart, metadataPart.length);
-  body.set(base64Bytes, metadataPart.length + filePart.length);
-  body.set(closeDelimiterBytes, metadataPart.length + filePart.length + base64Bytes.length);
-
-  const response = await fetch(
-    "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": `multipart/related; boundary=${boundary}`,
-      },
-      body,
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Failed to upload to Google Drive: ${error}`);
-  }
-
-  return response.json();
-}
-
-async function createGoogleDriveFolder(
-  accessToken: string,
-  folderName: string,
-  parentFolderId?: string
-): Promise<{ id: string; webViewLink: string }> {
-  const metadata: Record<string, unknown> = {
-    name: folderName,
-    mimeType: "application/vnd.google-apps.folder",
-  };
-
-  if (parentFolderId) {
-    metadata.parents = [parentFolderId];
-  }
-
-  const response = await fetch(
-    "https://www.googleapis.com/drive/v3/files?fields=id,webViewLink",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(metadata),
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Failed to create folder: ${error}`);
-  }
-
-  return response.json();
-}
-
-async function getGoogleAccessToken(serviceAccountKey: string): Promise<string> {
-  const key = JSON.parse(serviceAccountKey);
-  
-  // Create JWT header
-  const header = {
-    alg: "RS256",
-    typ: "JWT",
-  };
-
-  // Create JWT claim set
-  const now = Math.floor(Date.now() / 1000);
-  const claim = {
-    iss: key.client_email,
-    scope: "https://www.googleapis.com/auth/drive",
-    aud: "https://oauth2.googleapis.com/token",
-    exp: now + 3600,
-    iat: now,
-  };
-
-  // Base64url encode
-  const base64urlEncode = (obj: unknown) => {
-    const str = JSON.stringify(obj);
-    const base64 = btoa(str);
-    return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-  };
-
-  const encodedHeader = base64urlEncode(header);
-  const encodedClaim = base64urlEncode(claim);
-  const signatureInput = `${encodedHeader}.${encodedClaim}`;
-
-  // Import the private key
-  const pemHeader = "-----BEGIN PRIVATE KEY-----";
-  const pemFooter = "-----END PRIVATE KEY-----";
-  const pemContents = key.private_key
-    .replace(pemHeader, "")
-    .replace(pemFooter, "")
-    .replace(/\s/g, "");
-  
-  const binaryDer = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
-
-  const cryptoKey = await crypto.subtle.importKey(
-    "pkcs8",
-    binaryDer,
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-
-  // Sign
-  const signature = await crypto.subtle.sign(
-    "RSASSA-PKCS1-v1_5",
-    cryptoKey,
-    new TextEncoder().encode(signatureInput)
-  );
-
-  const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
-
-  const jwt = `${signatureInput}.${encodedSignature}`;
-
-  // Exchange JWT for access token
-  const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion: jwt,
-    }),
-  });
-
-  if (!tokenResponse.ok) {
-    const error = await tokenResponse.text();
-    throw new Error(`Failed to get access token: ${error}`);
-  }
-
-  const tokenData = await tokenResponse.json();
-  return tokenData.access_token;
+  referenceFiles: FileData[];
 }
 
 async function sendTelegramMessage(
@@ -209,90 +39,214 @@ async function sendTelegramMessage(
         chat_id: chatId,
         text: message,
         parse_mode: "HTML",
+        disable_web_page_preview: false,
       }),
     }
   );
 
   if (!response.ok) {
     const error = await response.text();
+    console.error("Telegram error response:", error);
     throw new Error(`Failed to send Telegram message: ${error}`);
   }
 }
 
+async function sendTelegramMediaGroup(
+  botToken: string,
+  chatId: string,
+  photos: { url: string; name: string }[],
+  brandName: string
+): Promise<void> {
+  if (photos.length === 0) return;
+
+  // Build media array for sendMediaGroup
+  const media = photos.map((photo, index) => ({
+    type: "photo",
+    media: photo.url,
+    caption: index === 0
+      ? `📷 <b>Reference Images (${photos.length})</b>\n🏷️ Brand: ${brandName}`
+      : undefined,
+    parse_mode: index === 0 ? "HTML" : undefined,
+  }));
+
+  const response = await fetch(
+    `https://api.telegram.org/bot${botToken}/sendMediaGroup`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        media: media,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.text();
+    console.error("Telegram media group error response:", error);
+    console.warn(`Failed to send media group: ${error}`);
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
+  console.log("Received request:", req.method);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const formData: FormData = await req.json();
-    
-    const serviceAccountKey = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
+    console.log("Form data received for brand:", formData.brandName);
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const telegramBotToken = Deno.env.get("TELEGRAM_BOT_TOKEN");
     const telegramChatId = Deno.env.get("TELEGRAM_CHAT_ID");
 
-    if (!serviceAccountKey || !telegramBotToken || !telegramChatId) {
-      throw new Error("Missing required environment variables");
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error("Missing Supabase environment variables");
+      throw new Error("Missing Supabase environment variables");
     }
 
-    // Get Google Drive access token
-    const accessToken = await getGoogleAccessToken(serviceAccountKey);
+    if (!telegramBotToken || !telegramChatId) {
+      console.error("Missing Telegram environment variables");
+      throw new Error("Missing Telegram environment variables");
+    }
 
-    // Create folder for this company
-    const folderName = `${formData.brandName} - ${new Date().toISOString().split("T")[0]}`;
-    const folder = await createGoogleDriveFolder(accessToken, folderName);
+    // Create Supabase client with service role
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Upload all reference files to the folder
-    const uploadedFiles: { name: string; link: string }[] = [];
+    // Upload files to storage and collect URLs
+    const uploadedFiles: { name: string; url: string }[] = [];
+    const timestamp = Date.now();
+    const folderPath = `${formData.brandName.replace(/[^a-zA-Z0-9]/g, "_")}_${timestamp}`;
+
+    console.log("Uploading", formData.referenceFiles.length, "files to folder:", folderPath);
+
     for (const file of formData.referenceFiles) {
-      const uploaded = await uploadToGoogleDrive(
-        accessToken,
-        folder.id,
-        file.name,
-        file.base64,
-        file.mimeType
-      );
-      uploadedFiles.push({ name: file.name, link: uploaded.webViewLink || `https://drive.google.com/file/d/${uploaded.id}/view` });
+      try {
+        // Convert base64 to Uint8Array
+        const binaryString = atob(file.base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        const filePath = `${folderPath}/${file.name}`;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("logo-references")
+          .upload(filePath, bytes, {
+            contentType: file.mimeType,
+            upsert: false,
+          });
+
+        if (uploadError) {
+          console.error("Upload error for file:", file.name, uploadError);
+          throw uploadError;
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage
+          .from("logo-references")
+          .getPublicUrl(filePath);
+
+        uploadedFiles.push({
+          name: file.name,
+          url: urlData.publicUrl,
+        });
+
+        console.log("Uploaded file:", file.name);
+      } catch (fileError) {
+        console.error("Error uploading file:", file.name, fileError);
+        throw new Error(`Failed to upload file ${file.name}: ${fileError}`);
+      }
     }
 
-    // Compose Telegram message
-    const folderLink = folder.webViewLink || `https://drive.google.com/drive/folders/${folder.id}`;
-    
-    const message = `
-<b>🎨 New Logo Design Request</b>
+    // Store submission in database
+    console.log("Storing submission in database");
+    const { data: submission, error: dbError } = await supabase
+      .from("questionnaire_submissions")
+      .insert({
+        brand_name: formData.brandName,
+        tagline: formData.tagline || null,
+        description: formData.description,
+        target_customers: formData.targetCustomers,
+        logo_type: formData.logoType,
+        color_preference: formData.colorPreference,
+        font_style: formData.fontStyle,
+        additional_notes: formData.additionalNotes || null,
+        selected_usage: formData.selectedUsage,
+        reference_files: uploadedFiles,
+      })
+      .select()
+      .single();
 
-<b>Brand Name:</b> ${formData.brandName}
-<b>Tagline:</b> ${formData.tagline || "N/A"}
+    if (dbError) {
+      console.error("Database error:", dbError);
+      throw new Error(`Failed to store submission: ${dbError.message}`);
+    }
 
-<b>Description:</b>
+    console.log("Submission stored with ID:", submission.id);
+
+    // Compose Telegram message with proper spacing
+    const message = `🎨 <b>NEW LOGO DESIGN REQUEST</b>
+
+━━━━━━━━━━━━━━━━━━━━
+
+🏷️  <b>${formData.brandName.toUpperCase()}</b>
+${formData.tagline ? `<i>"${formData.tagline}"</i>` : ""}
+
+━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━
+
+📝 <b>DESCRIPTION</b>
+
 ${formData.description}
 
-<b>Target Customers:</b>
+━━━━━━━━━━━━━━━━━━━━
+
+👥 <b>TARGET CUSTOMERS</b>
+
 ${formData.targetCustomers}
 
-<b>Logo Type:</b> ${formData.logoType}
-<b>Color Preference:</b> ${formData.colorPreference}
-<b>Font Style:</b> ${formData.fontStyle}
-<b>Usage:</b> ${formData.selectedUsage.join(", ")}
+━━━━━━━━━━━━━━━━━━━━
 
-<b>Additional Notes:</b>
-${formData.additionalNotes || "None"}
+🎯 <b>DESIGN PREFERENCES</b>
 
-<b>📁 Reference Files Folder:</b>
-<a href="${folderLink}">${folderLink}</a>
+   <b>Logo Type:</b>  ${formData.logoType}
+   <b>Color:</b>  ${formData.colorPreference}
+   <b>Font Style:</b>  ${formData.fontStyle}
+   <b>Usage:</b>  ${formData.selectedUsage.join(", ")}
 
-<b>Files Uploaded:</b> ${uploadedFiles.length}
-${uploadedFiles.map(f => `• ${f.name}`).join("\n")}
-`;
+━━━━━━━━━━━━━━━━━━━━
 
-    // Send Telegram notification
+📎 <b>ADDITIONAL NOTES</b>
+
+${formData.additionalNotes || "None provided"}
+
+━━━━━━━━━━━━━━━━━━━━
+
+📁 <b>REFERENCE FILES:</b>  ${uploadedFiles.length} file(s)
+${uploadedFiles.map((f, i) => `   ${i + 1}. <a href="${f.url}">${f.name}</a>`).join("\n")}
+
+━━━━━━━━━━━━━━━━━━━━
+
+🆔 <b>Submission ID:</b>  ${submission.id}
+📅 <b>Submitted:</b>  ${new Date().toLocaleString("en-US", { timeZone: "UTC" })} UTC`;
+
+    // Send Telegram notification with URL preview enabled
+    console.log("Sending Telegram text notification with URL preview");
     await sendTelegramMessage(telegramBotToken, telegramChatId, message);
+    console.log("Telegram notification sent successfully with preview");
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        folderLink,
-        filesUploaded: uploadedFiles.length 
+      JSON.stringify({
+        success: true,
+        submissionId: submission.id,
+        filesUploaded: uploadedFiles.length
       }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
