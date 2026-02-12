@@ -520,7 +520,6 @@ const Index = () => {
             number={10}
             title={t.form.additionalNotes.title}
             subtitle={t.form.additionalNotes.subtitle}
-            required
             error={errors.additionalNotes}
           >
             <Textarea

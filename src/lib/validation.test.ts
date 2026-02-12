@@ -46,10 +46,10 @@ describe("validateForm", () => {
     expect(errors.description).toBe(mockT.validation.descriptionRequired);
   });
 
-  it("should return error if additional notes are missing", () => {
+  it("should NOT return error if additional notes are missing", () => {
     const data = { ...validFormData, additionalNotes: "" };
     const errors = validateForm(data, validFiles, validUsage, mockT, "en");
-    expect(errors.additionalNotes).toBe("Additional notes are required");
+    expect(errors.additionalNotes).toBeUndefined();
   });
 
   it("should return error if files are missing", () => {

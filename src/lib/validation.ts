@@ -48,9 +48,6 @@ export const validateForm = (
   if (!formData.fontStyle) {
     errors.fontStyle = t.validation.fontStyleRequired;
   }
-  if (!formData.additionalNotes.trim()) {
-    errors.additionalNotes = lang === "en" ? "Additional notes are required" : "അധിക കുറിപ്പുകൾ ആവശ്യമാണ്";
-  }
   if (referenceFiles.length === 0) {
     errors.referenceFiles = t.validation.logoReferenceRequired;
   }
